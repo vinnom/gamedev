@@ -1,18 +1,18 @@
 class Personagem {
-  constructor(imagem) {
+  constructor(imagem, posicaoX, posicaoY, largura, altura, spriteTamanhoX, spriteTamanhoY) {
     this.imagem = imagem;
-    this.posicaoX = 0;
-    this.posicaoY = height - 135;
-    this.largura = 110;
-    this.altura = 135;
+    this.posicaoX = posicaoX;
+    this.posicaoY = posicaoY;
+    this.largura = largura;
+    this.altura = altura;
+    this.spriteTamanhoX = spriteTamanhoX;
+    this.spriteTamanhoY = spriteTamanhoY;
     this.spriteLinha = 0;
     this.spriteColuna = 0;
-    this.spriteTamanhoX = 220;
-    this.spriteTamanhoY = 270;
   }
 
   exiba() {
-    image(personagemImagem,
+    image(this.imagem,
       this.posicaoX, this.posicaoY,
       this.largura, this.altura,
       this.spriteColuna, this.spriteLinha,
