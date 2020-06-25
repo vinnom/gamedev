@@ -79,21 +79,10 @@ const inimigos = [];
 const variacaoY = 60;
 
 function preload() {
-  imagem.cenarioFundo = loadImage(caminho.fundo);
-  imagem.cenarioMeio = loadImage(caminho.meio);
-  imagem.cenarioFrente = loadImage(caminho.frente);
-
-  imagem.protagonista = loadImage(caminho.protagonista);
-  imagem.gotinha = loadImage(caminho.gotinha);
-  imagem.gotinhaVoadora = loadImage(caminho.gotinhaVoadora);
-  imagem.troll = loadImage(caminho.troll);
-
-  imagem.gameOver = loadImage(caminho.imagemGameOver);
-  console.log(imagem);
-
-  som.trilha = loadSound(caminho.trilha);
-  som.pulo = loadSound(caminho.pulo);
-  som.gameOver = loadSound(caminho.somGameOver);
+  carregarCenario();
+  carregarPersonagens();
+  carregarSons();
+  carregarMiscelanea();
 }
 
 function setup() {
@@ -122,17 +111,33 @@ function draw() {
 
   inimigos.forEach((inimigo) => {
     if (personagem.protagonista.estahColidindo(inimigo)) {
-      image(imagem.gameOver, width * 0.5 - 206, height * 0.3);
-      som.trilha.stop();
-      som.gameOver.play();
-      botaoReiniciar = createImg(caminho.reiniciar, "Reiniciar");
-      botaoReiniciar.size(80, 80);
-      botaoReiniciar.position(width * 0.5 - 50, height * 0.3 + 100);
-      botaoReiniciar.mousePressed(reinicie);
-      noLoop();
+      interrompe();
     }
     pontuacao.pontua(inimigo);
   });
+}
+
+function carregarCenario() {
+  imagem.cenarioFundo = loadImage(caminho.fundo);
+  imagem.cenarioMeio = loadImage(caminho.meio);
+  imagem.cenarioFrente = loadImage(caminho.frente);
+}
+
+function carregarPersonagens() {
+  imagem.protagonista = loadImage(caminho.protagonista);
+  imagem.gotinha = loadImage(caminho.gotinha);
+  imagem.gotinhaVoadora = loadImage(caminho.gotinhaVoadora);
+  imagem.troll = loadImage(caminho.troll);
+}
+
+function carregarSons() {
+  som.trilha = loadSound(caminho.trilha);
+  som.pulo = loadSound(caminho.pulo);
+  som.gameOver = loadSound(caminho.somGameOver);
+}
+
+function carregarMiscelanea() {
+  imagem.gameOver = loadImage(caminho.imagemGameOver);
 }
 
 function reinicie() {
@@ -204,12 +209,12 @@ function instanciaCoordenadasInimigos() {
   posicao.gotinhaVoadora = new Coordenadas(width + 547, 400);
   tamanho.gotinhaVoadora = new Coordenadas(100, 75);
   tamanhoSprite.gotinhaVoadora = new Coordenadas(200, 150);
-  toque.gotinhaVoadora = new Toque(0.55, 0.55, 25, 20);
+  toque.gotinhaVoadora = new Toque(0.5, 0.5, 25, 20);
 
   posicao.troll = new Coordenadas(width + 937, height - 170 - variacaoY);
   tamanho.troll = new Coordenadas(180, 180);
   tamanhoSprite.troll = new Coordenadas(400, 400);
-  toque.troll = new Toque(0.6, 0.6, 40, 40);
+  toque.troll = new Toque(0.5, 0.5, 85, 65);
 }
 
 function instanciaCoordenadasProtagonista() {
@@ -223,4 +228,15 @@ function instanciaCenarios() {
   cenario.fundo = new Cenario(imagem.cenarioFundo, velocidade.fundo);
   cenario.meio = new Cenario(imagem.cenarioMeio, velocidade.meio);
   cenario.frente = new Cenario(imagem.cenarioFrente, velocidade.frente);
+}
+
+function interrompe() {
+  image(imagem.gameOver, width * 0.5 - 206, height * 0.3);
+  som.trilha.stop();
+  som.gameOver.play();
+  botaoReiniciar = createImg(caminho.reiniciar, "Reiniciar");
+  botaoReiniciar.size(80, 80);
+  botaoReiniciar.position(width * 0.5 - 50, height * 0.3 + 100);
+  botaoReiniciar.mousePressed(reinicie);
+  noLoop();
 }
