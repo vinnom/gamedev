@@ -1,93 +1,226 @@
-const cenarioFundoImagemCaminho = "imagens/cenario/floresta_fundo.png";
-const cenarioFrenteImagemCaminho = "imagens/cenario/floresta_frente.png";
-const protagonistaImagemCaminho = "imagens/personagens/protagonista/correndo.png";
-const gotinhaImagemCaminho = "imagens/personagens/inimigos/gotinha.png";
-const gameOverCaminho = "imagens/assets/game-over.png";
-const trilhaJogoCaminho = "sons/trilha_jogo.mp3";
-const somPuloCaminho = "sons/som_pulo.wav";
+const caminho = {
+  fundo: "imagens/cenario/floresta_fundo.png",
+  meio: "imagens/cenario/floresta_meio.png",
+  frente: "imagens/cenario/floresta_frente.png",
+  protagonista: "imagens/personagens/protagonista/correndo.png",
+  gotinha: "imagens/personagens/inimigos/gotinha.png",
+  gotinhaVoadora: "imagens/personagens/inimigos/gotinha-voadora-teste.png",
+  troll: "imagens/personagens/inimigos/troll-teste.png",
+  trilha: "sons/trilha_jogo.mp3",
+  pulo: "sons/som_pulo.wav",
+  somGameOver: "sons/som_gameOver.wav",
+  imagemGameOver: "imagens/assets/game-over.png",
+  reiniciar: "imagens/assets/reiniciar.png",
+};
+const velocidade = {
+  fundo: 1,
+  meio: 2,
+  frente: 3,
+  gotinha: 8,
+  gotinhaVoadora: 6,
+  troll: 5,
+};
+const imagem = {
+  cenarioFundo: undefined,
+  cenarioMeio: undefined,
+  cenarioFrente: undefined,
+  protagonista: undefined,
+  gotinha: undefined,
+  gotinhaVoadora: undefined,
+  troll: undefined,
+  gameOver: undefined,
+};
+const som = {
+  trilha: undefined,
+  pulo: undefined,
+  gameOver: undefined,
+};
+const cenario = {
+  fundo: undefined,
+  meio: undefined,
+  frente: undefined,
+};
+const personagem = {
+  protagonista: undefined,
+  gotinha: undefined,
+  gotinhaVoadora: undefined,
+  troll: undefined,
+};
+const posicao = {
+  protagonista: undefined,
+  gotinha: undefined,
+  gotinhaVoadora: undefined,
+  troll: undefined,
+};
+const tamanho = {
+  protagonista: undefined,
+  gotinha: undefined,
+  gotinhaVoadora: undefined,
+  troll: undefined,
+};
+const tamanhoSprite = {
+  protagonista: undefined,
+  gotinha: undefined,
+  gotinhaVoadora: undefined,
+  troll: undefined,
+};
+const toque = {
+  protagonista: undefined,
+  gotinha: undefined,
+  gotinhaVoadora: undefined,
+  troll: undefined,
+};
 
-const velocidadeCenarioFundo = 2;
-const velocidadeCenarioFrente = 5;
+let pontuacao;
+let botaoReiniciar;
 
-let cenarioFundoImagem;
-let cenarioFrenteImagem;
-let protagonistaImagem;
-let gotinhaImagem;
-let gameOverImagem;
+const inimigos = [];
 
-let trilhaJogo;
-let somPulo;
-
-let cenarioFundo;
-let cenarioFrente;
-let protagonista;
-let gotinha;
+const variacaoY = 60;
 
 function preload() {
-  cenarioFundoImagem = loadImage(cenarioFundoImagemCaminho);
-  cenarioFrenteImagem = loadImage(cenarioFrenteImagemCaminho);
+  imagem.cenarioFundo = loadImage(caminho.fundo);
+  imagem.cenarioMeio = loadImage(caminho.meio);
+  imagem.cenarioFrente = loadImage(caminho.frente);
 
-  protagonistaImagem = loadImage(protagonistaImagemCaminho);
-  gotinhaImagem = loadImage(gotinhaImagemCaminho);
+  imagem.protagonista = loadImage(caminho.protagonista);
+  imagem.gotinha = loadImage(caminho.gotinha);
+  imagem.gotinhaVoadora = loadImage(caminho.gotinhaVoadora);
+  imagem.troll = loadImage(caminho.troll);
 
-  gameOverImagem = loadImage(gameOverCaminho);
+  imagem.gameOver = loadImage(caminho.imagemGameOver);
+  console.log(imagem);
 
-  trilhaJogo = loadSound(trilhaJogoCaminho);
-  somPulo = loadSound(somPuloCaminho);
+  som.trilha = loadSound(caminho.trilha);
+  som.pulo = loadSound(caminho.pulo);
+  som.gameOver = loadSound(caminho.somGameOver);
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-
-  cenarioFundo = new Cenario(cenarioFundoImagem, velocidadeCenarioFundo)
-  cenarioFrente = new Cenario(cenarioFrenteImagem, velocidadeCenarioFrente);
-
-  const posicaoXProtagonista = 30;
-  const posicaoYProtagonista = height - 135;
-  const larguraProtagonista = 110;
-  const alturaProtagonista = 135;
-  const larguraSpriteProtagonista = 220;
-  const alturaSpriteProtagonista = 270;
-
-  protagonista = new Protagonista(protagonistaImagem,
-    posicaoXProtagonista, posicaoYProtagonista,
-    larguraProtagonista, alturaProtagonista,
-    larguraSpriteProtagonista, alturaSpriteProtagonista,
-    somPulo
-  );
-
-  const posicaoXGotinha = width + 100;
-  const posicaoYGotinha = height - 52;
-  const larguraGotinha = 52;
-  const alturaGotinha = 50;
-  const larguraSpriteGotinha = 105;
-  const alturaSpriteGotinha = 100;
-
-  gotinha = new Gotinha(gotinhaImagem,
-    posicaoXGotinha, posicaoYGotinha,
-    larguraGotinha, alturaGotinha,
-    larguraSpriteGotinha, alturaSpriteGotinha
-  );
-
   frameRate(30);
-
-  trilhaJogo.loop();
+  inicie();
 }
 
 function keyPressed() {
   if (keyCode === UP_ARROW) {
-    protagonista.pule();
+    personagem.protagonista.pule();
   }
 }
 
 function draw() {
-  cenarioFundo.exiba();
-  cenarioFrente.exiba();
-  protagonista.exiba();
-  gotinha.exiba();
-  if (protagonista.estahColidindo(gotinha)) {
-    image(gameOverImagem, width * 0.3, height * 0.5);
-    trilhaJogo.stop();
-    noLoop();
-  }
+  cenario.fundo.exiba();
+  cenario.meio.exiba();
+  cenario.frente.exiba();
+
+  personagem.protagonista.exiba();
+  personagem.gotinha.exiba();
+  personagem.gotinhaVoadora.exiba();
+  personagem.troll.exiba();
+
+  pontuacao.exiba();
+
+  inimigos.forEach((inimigo) => {
+    if (personagem.protagonista.estahColidindo(inimigo)) {
+      image(imagem.gameOver, width * 0.5 - 206, height * 0.3);
+      som.trilha.stop();
+      som.gameOver.play();
+      botaoReiniciar = createImg(caminho.reiniciar, "Reiniciar");
+      botaoReiniciar.size(80, 80);
+      botaoReiniciar.position(width * 0.5 - 50, height * 0.3 + 100);
+      botaoReiniciar.mousePressed(reinicie);
+      noLoop();
+    }
+    pontuacao.pontua(inimigo);
+  });
+}
+
+function reinicie() {
+  botaoReiniciar.remove();
+  inicie();
+  redraw();
+  loop();
+}
+
+function inicie() {
+  instanciaCenarios();
+  instanciaCoordenadasProtagonista();
+  instanciaCoordenadasInimigos();
+
+  instanciaProtagonista();
+  instanciaInimigos();
+
+  pontuacao = new Pontuacao();
+  inimigos.length = 0;
+  Array.prototype.push.apply(inimigos, [personagem.gotinha, personagem.gotinhaVoadora, personagem.troll]);
+  console.log(inimigos);
+  som.trilha.loop();
+}
+
+function instanciaInimigos() {
+  personagem.gotinha = new Inimigo(
+    imagem.gotinha,
+    posicao.gotinha,
+    tamanho.gotinha,
+    tamanhoSprite.gotinha,
+    velocidade.gotinha,
+    toque.gotinha
+  );
+  personagem.gotinhaVoadora = new Inimigo(
+    imagem.gotinhaVoadora,
+    posicao.gotinhaVoadora,
+    tamanho.gotinhaVoadora,
+    tamanhoSprite.gotinhaVoadora,
+    velocidade.gotinhaVoadora,
+    toque.gotinhaVoadora
+  );
+  personagem.troll = new Inimigo(
+    imagem.troll,
+    posicao.troll,
+    tamanho.troll,
+    tamanhoSprite.troll,
+    velocidade.troll,
+    toque.troll
+  );
+}
+
+function instanciaProtagonista() {
+  personagem.protagonista = new Protagonista(
+    imagem.protagonista,
+    posicao.protagonista,
+    tamanho.protagonista,
+    tamanhoSprite.protagonista,
+    som.pulo,
+    toque.protagonista
+  );
+}
+
+function instanciaCoordenadasInimigos() {
+  posicao.gotinha = new Coordenadas(width + 73, height - 50 - variacaoY);
+  tamanho.gotinha = new Coordenadas(52, 50);
+  tamanhoSprite.gotinha = new Coordenadas(105, 100);
+  toque.gotinha = new Toque(0.65, 0.65, 15, 15);
+
+  posicao.gotinhaVoadora = new Coordenadas(width + 547, 400);
+  tamanho.gotinhaVoadora = new Coordenadas(100, 75);
+  tamanhoSprite.gotinhaVoadora = new Coordenadas(200, 150);
+  toque.gotinhaVoadora = new Toque(0.55, 0.55, 25, 20);
+
+  posicao.troll = new Coordenadas(width + 937, height - 170 - variacaoY);
+  tamanho.troll = new Coordenadas(180, 180);
+  tamanhoSprite.troll = new Coordenadas(400, 400);
+  toque.troll = new Toque(0.6, 0.6, 40, 40);
+}
+
+function instanciaCoordenadasProtagonista() {
+  posicao.protagonista = new Coordenadas(30, height - 135 - variacaoY);
+  tamanho.protagonista = new Coordenadas(110, 135);
+  tamanhoSprite.protagonista = new Coordenadas(220, 270);
+  toque.protagonista = new Toque(0.65, 0.7, 15, 15);
+}
+
+function instanciaCenarios() {
+  cenario.fundo = new Cenario(imagem.cenarioFundo, velocidade.fundo);
+  cenario.meio = new Cenario(imagem.cenarioMeio, velocidade.meio);
+  cenario.frente = new Cenario(imagem.cenarioFrente, velocidade.frente);
 }

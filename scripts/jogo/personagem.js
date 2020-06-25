@@ -1,12 +1,12 @@
 class Personagem {
-  constructor(imagem, posicaoX, posicaoY, largura, altura, spriteTamanhoX, spriteTamanhoY) {
+  constructor(imagem, posicao, tamanho, tamanhoSprite) {
     this.imagem = imagem;
-    this.posicaoX = posicaoX;
-    this.posicaoY = posicaoY;
-    this.largura = largura;
-    this.altura = altura;
-    this.spriteTamanhoX = spriteTamanhoX;
-    this.spriteTamanhoY = spriteTamanhoY;
+    this.posicaoX = posicao.valorX;
+    this.posicaoY = posicao.valorY;
+    this.largura = tamanho.valorX;
+    this.altura = tamanho.valorY;
+    this.spriteTamanhoX = tamanhoSprite.valorX;
+    this.spriteTamanhoY = tamanhoSprite.valorY;
     this.spriteLinha = 0;
     this.spriteColuna = 0;
   }

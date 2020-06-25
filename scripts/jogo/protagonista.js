@@ -1,17 +1,21 @@
 class Protagonista extends Personagem {
-  constructor(imagem, posicaoX, posicaoY, largura, altura, spriteTamanhoX, spriteTamanhoY, somPulo) {
-    super(imagem, posicaoX, posicaoY, largura, altura, spriteTamanhoX, spriteTamanhoY);
-    this.posicaoYInicial = posicaoY;
-    this.alturaPulo = 0;
+  constructor(imagem, posicao, tamanho, tamanhoSprite, somPulo, toque) {
+    super(imagem, posicao, tamanho, tamanhoSprite);
+    this.posicaoYInicial = posicao.valorY;
+    this.velocidadePulo = 0;
     this.gravidade = 2;
     this.contaPulo = 1;
     this.somPulo = somPulo;
+    this.precisaoX = toque.precisaoX;
+    this.precisaoY = toque.precisaoY;
+    this.correcaoX = toque.correcaoX;
+    this.correcaoY = toque.correcaoY;
   }
 
   pule() {
     if (this.contaPulo < 3) {
       this.somPulo.play();
-      this.alturaPulo = -30; 
+      this.velocidadePulo = -30;
       this.contaPulo++;
     }
   }
@@ -22,8 +26,8 @@ class Protagonista extends Personagem {
   }
 
   acaoGravitacional() {
-    this.posicaoY += this.alturaPulo;
-    this.alturaPulo += this.gravidade;
+    this.posicaoY += this.velocidadePulo;
+    this.velocidadePulo += this.gravidade;
 
     if (this.posicaoY > this.posicaoYInicial) {
       this.posicaoY = this.posicaoYInicial;
@@ -31,13 +35,25 @@ class Protagonista extends Personagem {
     }
   }
 
-  estahColidindo(inimigo){
-    const precisao = 0.65;
+  estahColidindo(inimigo) {
+    // noFill();
+    // rect(this.posicaoX + this.correcaoX, this.posicaoY, this.largura * this.precisaoX, this.altura * this.precisaoY);
+    // rect(
+    //   inimigo.posicaoX + inimigo.correcaoX,
+    //   inimigo.posicaoY + inimigo.correcaoY,
+    //   inimigo.largura * inimigo.precisaoX,
+    //   inimigo.altura * inimigo.precisaoY
+    // );
+
     return collideRectRect(
-      this.posicaoX, this.posicaoY,
-      this.largura * precisao, this.altura * precisao,
-      inimigo.posicaoX, inimigo.posicaoY,
-      inimigo.largura * precisao, inimigo.altura * precisao
+      this.posicaoX + this.correcaoX,
+      this.posicaoY + this.correcaoY,
+      this.largura * this.precisaoX,
+      this.altura * this.precisaoY,
+      inimigo.posicaoX + inimigo.correcaoX,
+      inimigo.posicaoY + inimigo.correcaoY,
+      inimigo.largura * inimigo.precisaoX,
+      inimigo.altura * inimigo.precisaoY
     );
   }
 }

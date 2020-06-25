@@ -3,13 +3,13 @@ class Cenario {
     this.imagem = imagem;
     this.velocidade = velocidade;
     this.posicaoX1 = 0;
-    this.posicaoX2 = width;
+    this.posicaoX2 = imagem.width;
     this.posicaoY = 0;
   }
 
   exiba() {
-    image(this.imagem, this.posicaoX1, this.posicaoY, width, height);
-    image(this.imagem, this.posicaoX2, this.posicaoY, width, height);
+    image(this.imagem, this.posicaoX1, this.posicaoY, this.imagem.width, height);
+    image(this.imagem, this.posicaoX2, this.posicaoY, this.imagem.width, height);
     this.mova();
   }
 
@@ -22,8 +22,8 @@ class Cenario {
   }
 
   encaixe(posicaoX) {
-    if (posicaoX < -width) {
-      return width;
+    if (posicaoX < -this.imagem.width) {
+      return this.imagem.width - 5;
     }
     return posicaoX;
   }
